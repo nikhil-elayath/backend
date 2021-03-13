@@ -10,14 +10,14 @@ const currentDate= new Date()
 
 
 
-router.post("/youtube-videos", async (req, res, next) => {
+router.get("/youtube-videos", async (req, res, next) => {
 
 // getting search results from youtube api
 // calling the api every 10 seconds
 
 const gettingYoutubeData=()=>{
     setInterval(function(){google.youtube('v3').search.list({
-        key:'AIzaSyCzp5hDWDZzZqDVcl5s4m6VXivrhCJ1lZk',
+        key:'AIzaSyAU1MXY6nLf-JBdjqLa6Y-n2Fg6dpknvSw',
         part:'snippet',
         q:"football",
         order:"date",
@@ -84,4 +84,50 @@ const gettingYoutubeData=()=>{
       });
     }
   });
+  
+  
+  router.get("/all-videos", async (req, res, next) => {
+    try {
+
+      let {page, size} = req.query
+      // implementing pagination
+      if(!page)
+      {
+        page =1
+      } 
+      if(!size)
+      {
+        size=2
+      }
+      const limit = parseInt(size)
+      const skip = (page-1)* size
+      const allVideos = await db.any(
+        `select * from youtube_videos LIMIT ${limit}`
+      );
+  
+      res.status(200).json({
+        status: 200,
+        message: "all Videos fetched successfully",
+        page:page,
+        size:size,
+        data: allVideos,
+
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({
+        status: 400,
+        message: "videos could not be fetched",
+      });
+    }
+  });
+
+
+
+
+
+
+
+
+
   module.exports = router;
