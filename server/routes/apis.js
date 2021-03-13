@@ -9,7 +9,8 @@ const youtubeAPIKey = config.get("youtubeAPIKey");
 const currentDate= new Date()
 
 
-
+// the api which connects with youtube's api and fetches data for the term 'cricket'
+// orederd by date and all videos before the current date and time the api was called
 router.get("/youtube-videos", async (req, res, next) => {
 
 // getting search results from youtube api
@@ -31,7 +32,6 @@ const gettingYoutubeData=()=>{
       {
         for(data of response.data.items)
         {
-          console.log("data",data)
           video_title=data.snippet.title
           video_description=data.snippet.description
           video_published_date=data.snippet.publishTime
@@ -48,11 +48,25 @@ const gettingYoutubeData=()=>{
             ]
           );
 
+
           } catch (err) {
             console.log(err);
+            res.status(400).json({
+              status: 400,
+              message: "something went wrong",
+            });
 
           }
         }
+      }
+      // if there is no data present not writing it to the db and sending a 200 response
+      else{
+        res.status(200).json({
+          status: 200,
+          message: "No data found",
+        });
+
+
       }
     
     }).catch((err)=>console.log("err",err)) }, 10000);
@@ -64,12 +78,19 @@ const gettingYoutubeData=()=>{
 })
 
   // search api
+  // @param
+  //   1) keyword-> string
+  // the keyword is the string which will be used to search the data for in the table against the columns
+  // video title and video description
   router.post("/search", async (req, res, next) => {
     let keyword = req.body.keyword;
     try {
  
       const resultForVideoSearch = await db.any(
-        `select * from youtube_videos where video_title ILIKE '%${keyword}%'`
+        `select * from youtube_videos where video_title ILIKE '%${keyword}%'
+        union
+        select * from youtube_videos where video_description ILIKE '%${keyword}%'
+        `
       );
   
       res.status(200).json({
@@ -87,11 +108,12 @@ const gettingYoutubeData=()=>{
   });
   
   
+  // getting all the videos from the db in a reverse order
   router.get("/all-videos", async (req, res, next) => {
     try {
 
-      let {page, size} = req.query
       // implementing pagination
+      let {page, size} = req.query
       if(!page)
       {
         page =1
@@ -101,7 +123,6 @@ const gettingYoutubeData=()=>{
         size=2
       }
       const limit = parseInt(size)
-      const skip = (page-1)* size
       const allVideos = await db.any(
         `select * from youtube_videos ORDER BY youtube_videos_id DESC LIMIT ${limit} `
       );

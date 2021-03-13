@@ -34,7 +34,7 @@ db.connect()
   obj.done(); // success, release connection;
   if (process.env.NODE_ENV !== "test")
     app.listen(port, () =>
-      console.log(`Server is lissdsadsadsdtening at http://localhost:${port}`)
+      console.log(`Server is listening at http://localhost:${port}`)
     );
 })
 .catch((error) => {
