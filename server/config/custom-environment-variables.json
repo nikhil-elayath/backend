@@ -1,5 +1,6 @@
 {
     "jwtPrivateKey": "famPayJwtPrivateKey",
-    "postgresURL": "famPayPostgresURL"
+    "postgresURL": "postgresURL",
+    "youtubeAPIKey": "youtubeAPIKey"
   }
   

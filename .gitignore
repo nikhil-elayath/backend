@@ -5,7 +5,6 @@
 **/.pnp.js
 **/package-lock.json
 **/access.log
-# devieCoachWeb/devieCoach/src/config.js
 # testing
 **/.scannerwork
 **/coverage

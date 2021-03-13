@@ -1,5 +1,6 @@
 {
     "jwtPrivateKey": "",
-    "postgresURL": ""
+    "postgresURL": "",
+    "youtubeAPIKey":""
   }
   

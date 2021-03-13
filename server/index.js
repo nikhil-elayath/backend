@@ -2,7 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
-// const db = require("./db-init/dbConnection");
+const db = require("./db-init/dbConnection");
 
 // Declaring App to use Express Framework - Eli
 const app = express();
@@ -16,6 +16,7 @@ app.use(
 );
 // app.use(cors());
 app.use(logger("common"));
+
 app.use((err, req, res, next) => {
   next(error(err, req, res, next));
 });
@@ -24,11 +25,17 @@ app.disable("etag");
 const port = process.env.PORT || 5010;
 
 
-    // success, release connection;
-    if (process.env.NODE_ENV !== "test")
-      app.listen(port, () =>
-        console.log(`Server is listening at http://localhost:${port}`)
-      );
+db.connect()
+.then((obj) => {
+  obj.done(); // success, release connection;
+  if (process.env.NODE_ENV !== "test")
+    app.listen(port, () =>
+      console.log(`Server is listening at http://localhost:${port}`)
+    );
+})
+.catch((error) => {
+  console.log("ERROR:", error.message);
+});
 
 
 
