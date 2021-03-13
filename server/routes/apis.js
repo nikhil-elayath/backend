@@ -5,7 +5,7 @@ const { response } = require("..");
 const pg = require("pg-promise")();
 const db = require("../db-init/dbConnection");
 const config = require("config");
-// const youtubeAPIKey = config.get("youtubeAPIKey");
+const youtubeAPIKey = config.get("youtubeAPIKey");
 const currentDate= new Date()
 
 
@@ -17,7 +17,7 @@ router.get("/youtube-videos", async (req, res, next) => {
 
 const gettingYoutubeData=()=>{
     setInterval(function(){google.youtube('v3').search.list({
-        key:'AIzaSyAU1MXY6nLf-JBdjqLa6Y-n2Fg6dpknvSw',
+        key:youtubeAPIKey,
         part:'snippet',
         q:"cricket",
         order:"date",

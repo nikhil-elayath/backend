@@ -9,8 +9,8 @@ var options = {
   };
   const pg = require("pg-promise")(options);
   const config = require("config");
-  const postgresURL = 'postgres://localhost:5432/fampay'
-  console.log("postgresURL",postgresURL);
+  const postgresURL =config.get("postgresURL");
+
   const db = pg(postgresURL);
   
   module.exports = db;
