@@ -19,9 +19,9 @@ const gettingYoutubeData=()=>{
     setInterval(function(){google.youtube('v3').search.list({
         key:'AIzaSyAU1MXY6nLf-JBdjqLa6Y-n2Fg6dpknvSw',
         part:'snippet',
-        q:"football",
+        q:"cricket",
         order:"date",
-        publishedAfter: currentDate
+        publishedBefore: currentDate
     }).then(async(response)=>{
         var video_title
         var video_description
@@ -31,6 +31,7 @@ const gettingYoutubeData=()=>{
       {
         for(data of response.data.items)
         {
+          console.log("data",data)
           video_title=data.snippet.title
           video_description=data.snippet.description
           video_published_date=data.snippet.publishTime
@@ -102,7 +103,7 @@ const gettingYoutubeData=()=>{
       const limit = parseInt(size)
       const skip = (page-1)* size
       const allVideos = await db.any(
-        `select * from youtube_videos LIMIT ${limit}`
+        `select * from youtube_videos ORDER BY youtube_videos_id DESC LIMIT ${limit} `
       );
   
       res.status(200).json({
